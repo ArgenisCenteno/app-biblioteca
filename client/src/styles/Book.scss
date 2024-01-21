@@ -1,0 +1,16 @@
+@import "./variables.scss";
+@import "./responsive.scss";
+
+.bookTableHeader {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .btnAddBook{
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+  }
