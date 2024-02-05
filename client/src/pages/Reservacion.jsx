@@ -114,7 +114,7 @@ useEffect(() => {
 
   return (
     <Layout  > 
-    <h2 className='m-4 p-4'>Realizar reservación</h2>
+    <h2 className='m-4 p-4'>Detalles reservación</h2>
     <form className=' m-4 p-3' onSubmit={handleSubmit}>
       <div className="row mb-3">
     <div className="col-6">

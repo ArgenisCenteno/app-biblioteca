@@ -240,3 +240,51 @@ console.log( cedula, nuevaClave)
     res.status(500).json({ success: false, message: 'Error interno del servidor' });
   }
 };
+export const contarRegistros = async (req, res) => {
+  try {
+    const queryEjemplar = `SELECT COUNT(*) AS total_ejemplares FROM ejemplar`;
+    const queryProyectoEjemplar = `SELECT COUNT(*) AS total_proyecto_ejemplares FROM proyecto_ejemplar`;
+    const queryReservacion = `SELECT COUNT(*) AS total_reservaciones FROM reservacion`;
+    const querySolicitante = `SELECT COUNT(*) AS total_solicitantes FROM solicitante`;
+    const queryUsuario = `SELECT COUNT(*) AS total_usuarios FROM usuario`;
+    const queryPrestamo = `SELECT COUNT(*) AS total_prestamos FROM prestamo`;
+    const queryPrestamoProyecto = `SELECT COUNT(*) AS total_prestamos_proyecto FROM prestamo_proyecto`;
+
+    // Ejecutar las consultas
+    const [
+      resultEjemplar,
+      resultProyectoEjemplar,
+      resultReservacion,
+      resultSolicitante,
+      resultUsuario,
+      resultPrestamo,
+      resultPrestamoProyecto
+    ] = await Promise.all([
+      db.query(queryEjemplar),
+      db.query(queryProyectoEjemplar),
+      db.query(queryReservacion),
+      db.query(querySolicitante),
+      db.query(queryUsuario),
+      db.query(queryPrestamo),
+      db.query(queryPrestamoProyecto)
+    ]);
+ 
+
+    // Construir objeto de respuesta
+    const respuesta = {
+      total_ejemplares: resultEjemplar[0].total_ejemplares,
+      total_proyecto_ejemplares: resultProyectoEjemplar[0].total_proyecto_ejemplares,
+      total_reservaciones: resultReservacion[0].total_reservaciones,
+      total_solicitantes: resultSolicitante[0].total_solicitantes,
+      total_usuarios: resultUsuario[0].total_usuarios,
+      total_prestamos: resultPrestamo[0].total_prestamos,
+      total_prestamos_proyecto: resultPrestamoProyecto[0].total_prestamos_proyecto
+    };
+
+    // Devolver la respuesta
+    return res.status(200).json(respuesta);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};

@@ -99,7 +99,7 @@ const DetallesProyecto = () => {
   return (
     <Layout>
       <h2 className='m-3 p-3'>
-        Detalles del Proyecto
+        Detalles del Prestamo de Proyecto
       </h2>
  {/* Mostrar advertencia en rojo si es necesario */}
  {showWarning && (

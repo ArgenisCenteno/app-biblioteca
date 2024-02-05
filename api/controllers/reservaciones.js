@@ -91,10 +91,18 @@ export const deleteReservacion = async (req, res) => {
 export const getAllReservaciones = async (req, res) => {
   try {
     const query = `
-      SELECT  r.id_reservacion, r.actividad, r.fecha_inicio, r.fecha_culminacion, r.id_solicitante, r.estado,
-      CONCAT(s.nombre, ' ', s.apellido) AS nombre_completo 
-FROM reservacion AS r
-INNER JOIN solicitante AS s ON r.id_solicitante = s.id_solicitante
+      SELECT  
+        r.id_reservacion, 
+        r.actividad, 
+        DATE_FORMAT(r.fecha_inicio, '%Y-%m-%d %H:%i:%s') AS fecha_inicio, 
+        DATE_FORMAT(r.fecha_culminacion, '%Y-%m-%d %H:%i:%s') AS fecha_culminacion, 
+        r.id_solicitante, 
+        r.estado,
+        CONCAT(s.nombre, ' ', s.apellido) AS nombre_completo 
+      FROM 
+        reservacion AS r
+      INNER JOIN 
+        solicitante AS s ON r.id_solicitante = s.id_solicitante
     `;
 
     db.query(query, (err, data) => {
@@ -108,6 +116,7 @@ INNER JOIN solicitante AS s ON r.id_solicitante = s.id_solicitante
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
+
 
 export const getReservacionById = async (req, res) => {
   try {

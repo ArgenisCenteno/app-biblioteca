@@ -117,8 +117,8 @@ const CreateBorrower = () => {
           <label className="form-label"  >Sexo</label>
            <select className='form-control' name='sexo'  onChange={handleChange} required>
            <option value="">Seleccione un sexo</option>
-            <option value="Hombre">Hombre</option>
-            <option value="Mujer">Mujer</option>
+            <option value="Masculino">Masculino</option>
+            <option value="Femenino">Femenino</option>
              
            </select>
         </div>
@@ -133,6 +133,8 @@ const CreateBorrower = () => {
             <option value="Trayecto 2">Trayecto 2</option>
             <option value="Trayecto 3">Trayecto 3</option>
             <option value="Trayecto 4">Trayecto 4</option>
+            <option value="Trayecto 5">Trayecto 5</option>
+            <option value="No aplica">No aplica</option>
              
            </select>
          
@@ -151,6 +153,8 @@ const CreateBorrower = () => {
             <option value="Electrónica">Electronica</option>
             <option value="Industrial">Industrial</option>
             <option value="Higiene y seguridad">Higiene y seguridad</option>
+            <option value="Instrumentación y Control">Instrumentación y Control</option>
+            <option value="No aplica">No aplica</option>
              
            </select>
          

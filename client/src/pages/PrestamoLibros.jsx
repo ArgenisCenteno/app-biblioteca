@@ -127,7 +127,7 @@ const Project = () => {
       width: 160,
       renderCell: (params) => (
         <div>
-         <Link to={`/sistema/detalles-proyecto/${params.row.id_prestamo}`}>
+         <Link to={`/sistema/detalles-libro/${params.row.id_prestamo}`}>
           <button  className='btn btn-primary mr-2'>Ver</button>
         </Link>
          

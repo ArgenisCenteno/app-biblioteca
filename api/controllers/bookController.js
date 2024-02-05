@@ -147,22 +147,35 @@ export const updateBook = async (req, res) => {
 };
 
 //OBTENER TODOS LOS LIBROS
-  export const getAllBooks = async (req, res) => {
-    try {
-      // Consulta para obtener todos los libros ordenados por título
-      const query = "SELECT * FROM libro ORDER BY titulo";
-      
-      db.query(query, (err, data) => {
-        if (err) return res.status(500).json(err);
-  
-        // Devolver la lista de libros ordenados por título
-        return res.status(200).json(data);
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Error al obtener la lista de libros" });
-    }
-  };
+export const getAllBooks = async (req, res) => {
+  try {
+    // Consulta para obtener los libros con los campos solicitados
+    const query = `
+      SELECT 
+        id_libro,
+        titulo,
+        autor,
+        edicion,
+        editorial,
+        DATE_FORMAT(fecha_publicacion, '%Y-%m-%d') AS fecha_publicacion
+      FROM 
+        libro 
+      ORDER BY 
+        titulo
+    `;
+    
+    db.query(query, (err, data) => {
+      if (err) return res.status(500).json(err);
+
+      // Devolver la lista de libros con los campos solicitados
+      return res.status(200).json(data);
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error al obtener la lista de libros" });
+  }
+};
+
 
  //OBTENER TODOS LOS LIBROS
  export const getAllBooksAndCopies = async (req, res) => {
@@ -229,7 +242,7 @@ export const getBookByPnf = async (req, res) => {
       res.status(500).json({ message: "Error al obtener el libro" });
     }
   };
-
+    
 //OBTENER LIBROS POR MAYOR NUMERO DE CONSULTAS
 export const getBookByRes = async (req, res) => {
     try {

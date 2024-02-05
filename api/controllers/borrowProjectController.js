@@ -40,6 +40,14 @@ export const createBorrowProject = async (req, res) => {
             return res.status(500).json({ message: "Error al crear el registro en ejemplar_prestado" });
           }
         });
+        const updateEjemplar = "UPDATE proyecto_ejemplar SET estado = 'Prestado' WHERE id_ejemplar_proyecto =  ?";
+        db.query(updateEjemplar, ejemplarPrestadoValues, (err) => {
+          if (err) {
+            console.error(err);
+            return res.status(500).json({ message: "Error al crear el  prestamo" });
+          }
+
+        });
       });
 
       return res.status(200).json({ message: "Préstamo creado correctamente" });
@@ -122,7 +130,7 @@ export const createBorrowProject = async (req, res) => {
   INNER JOIN proyecto_ejemplar AS pej ON ppj.id_ejemplar = pej.id_ejemplar_proyecto
   INNER JOIN prestamo_proyecto AS pp ON ppj.id_prestamo = pp.id_prestamo_proyecto
   INNER JOIN proyecto AS p ON pej.id_proyecto = p.id_proyecto
-  INNER JOIN solicitante AS s ON pp.id_solicitante = s.id_solicitante
+  INNER JOIN solicitante AS s ON pp.id_solicitante = s.id_solicitante ORDER BY fecha_prestamo DESC
    `;
       
       db.query(query, (err, data) => {

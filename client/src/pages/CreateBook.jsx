@@ -115,6 +115,8 @@ const CreateBook = () => {
             <option value="Electrónica">Electronica</option>
             <option value="Industrial">Industrial</option>
             <option value="Higiene y seguridad">Higiene y seguridad</option>
+            <option value="Instrumentación y Control">Instrumentación y Control</option>
+            <option value="No aplica">No aplica</option>
            </select>
         </div>
       </div>  

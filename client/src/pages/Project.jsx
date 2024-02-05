@@ -2,15 +2,73 @@ import React,{useState, useEffect } from 'react'
 const apiKey = import.meta.env.VITE_REACT_APP_API_KEY;
 import Layout from '../components/ui/Layout.jsx'
 import Swal from 'sweetalert2';
-import axios from "axios"
+import jsPDF from 'jspdf';
+import axios from 'axios';
+import  'jspdf-autotable';
 import { Link } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid'; 
 import ReportProject from './ReporteProyectos.jsx';
+import { Button, Select, MenuItem } from '@mui/material';
 
 const Project = () => {
   const [project, setProject] = useState([]);
   
+  const [selectedPnf, setSelectedPnf] = useState('');
+  const [bookByPnf, setBookByPnf] = useState(null);
 
+  const handleChangePnf = (event) => {
+    setSelectedPnf(event.target.value);
+  };     
+
+  const generatePDF = (data) => {
+    // Crear una nueva instancia de jsPDF
+    const doc = new jsPDF();
+  
+    // Definir las columnas que deseas mostrar en el PDF
+    const columns = ['Título', 'Autor(es)',  'Trayecto',   'PNF', 'Fecha de Presentacion', 'Fecha de Registro'];
+  
+    // Mapear los datos para seleccionar solo las columnas que deseas y formatear las fechas
+    const rows = data.map(obj => [
+      obj.titulo,
+      obj.autor,
+      obj.trayecto, ,
+      obj.pnf,
+      formatDate(obj.fecha_presentacion),
+      formatDate(obj.fecha_registro)
+    ]);
+  
+    // Agregar un título al PDF
+    doc.text('Información de Proyectos', 10, 10);
+  
+    // Generar la tabla con jspdf-autotable
+    doc.autoTable({
+      head: [columns],
+      body: rows,
+    });
+  
+    // Guardar el PDF
+    doc.save('proyectos.pdf');
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString();
+  };
+  
+  const handleConsultar = async () => {
+    try {
+      const { data } = await axios.get(`${apiKey}/api/project/getProjectByPnf/${selectedPnf}`);
+      setBookByPnf(data);
+      generatePDF(data);
+    } catch (error) {
+      console.error(error);
+      Swal.fire({
+        icon: 'info',
+        title: 'Sin registros',
+        text: 'No hay proyectos por este PNF',
+      });
+    }
+  };
 
   //OBTENER TODOS LOS LIBROS
 
@@ -130,7 +188,22 @@ const Project = () => {
       <div className='bookTableHeader'>
         <div className='title'>
             <h2>Proyectos</h2>
-          
+            <Select
+            value={selectedPnf}
+            onChange={handleChangePnf}
+            displayEmpty
+          >
+            <MenuItem value="">Todos</MenuItem>
+            <MenuItem value="Informática">Informática</MenuItem>
+            <MenuItem value="Electrónica">Electrónica</MenuItem>
+            <MenuItem value="Industrial">Industrial</MenuItem>
+            <MenuItem value="Higiene y seguridad">Higiene y seguridad</MenuItem>
+            <MenuItem value="Instrumentación y Control">Instrumentación y Control</MenuItem>
+            <MenuItem value="No aplica">No aplica</MenuItem>
+          </Select>
+          <Button variant="contained" onClick={handleConsultar} disabled={!selectedPnf}>
+            Consultar 
+          </Button>
         </div>
        <div className='btnAddBook'>
         <Link to={"/sistema/agregar-proyecto"}>

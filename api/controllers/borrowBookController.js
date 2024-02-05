@@ -33,15 +33,30 @@ export const createBorrowBook = async (req, res) => {
       // Usamos map para insertar cada ID de ejemplar en la tabla
       id_ejemplar.forEach((id) => {
         const ejemplarPrestadoValues = [id.id_ejemplar, id_prestamo];
+
+      
       
         db.query(insertEjemplarPrestadoQuery, ejemplarPrestadoValues, (err) => {
           if (err) {
             console.error(err);
             return res.status(500).json({ message: "Error al crear el registro en ejemplar_prestado" });
           }
+
         });
       });
+      id_ejemplar.forEach((id) => {
+        const ejemplarPrestadoValues = [id.id_ejemplar, id_prestamo];
 
+        const updateEjemplar = "UPDATE ejemplar SET estado = 'Prestado' WHERE id_ejemplar =  ?";
+        db.query(updateEjemplar, ejemplarPrestadoValues, (err) => {
+          if (err) {
+            console.error(err);
+            return res.status(500).json({ message: "Error al crear el  prestamo" });
+          }
+
+        });
+      
+      })
       return res.status(200).json({ message: "Préstamo creado correctamente" });
     });
   } catch (error) {
@@ -110,7 +125,7 @@ export const createBorrowBook = async (req, res) => {
     JOIN solicitante S ON P.id_solicitante = S.id_solicitante
     JOIN ejemplar_prestado EP ON P.id_prestamo = EP.id_prestamo
     JOIN ejemplar E ON EP.id_ejemplar = E.id_ejemplar
-    JOIN libro L ON E.id_libro = L.id_libro`;
+    JOIN libro L ON E.id_libro = L.id_libro ORDER BY fecha_prestamo DESC`  ;
       
       db.query(query, (err, data) => {
         if (err) return res.status(500).json(err);
@@ -474,6 +489,24 @@ export const finalizarPrestamoLibro = async (req, res) => {
       if (result.affectedRows === 0) {
         return res.status(404).json({ message: 'Préstamo no encontrado' });
       }
+
+      const queryConsulta = 'SELECT id_ejemplar FROM ejemplar_prestado WHERE id_prestamo = ?';
+
+      db.query(queryConsulta, codigo, (err, result) => {
+        if(err){
+          console.error("Error", err)
+        }
+        result.forEach((id) => {
+         
+          const cambio = "UPDATE ejemplar SET estado = 'disponible' WHERE id_ejemplar" ;
+          const ejemplarPrestadoValues = [id.id_ejemplar ];
+          db.query(cambio, ejemplarPrestadoValues, (err) => { 
+            if (err) {
+              console.error(err);
+              return res.status(500).json({ message: "Error al crear al finalizaar prestamo" });
+            }
+          });})
+      })
 
       return res.status(200).json({ message: 'Préstamo finalizado correctamente' });
     });

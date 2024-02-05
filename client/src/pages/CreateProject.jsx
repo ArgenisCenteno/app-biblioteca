@@ -125,7 +125,7 @@ const CreateProject = () => {
         <div className="form-outline">
         <div className="form-outline">
           <label className="form-label"  >Cantidad</label>
-          <input type='number' min="1"   name='cantidad' placeholder='Cantidad' value={formData.cantidad}  onChange={handleChange}  className="form-control" />
+          <input type='number' min="1"   name='cantidad' placeholder='Cantidad' readOnly max="1" value={formData.cantidad}  onChange={handleChange}  className="form-control" />
         </div>
         </div>
       </div>
